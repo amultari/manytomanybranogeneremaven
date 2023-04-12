@@ -44,7 +44,7 @@ public class Brano {
 	@Column(name = "updatedatetime")
 	private LocalDateTime updateDateTime;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinTable(name = "brano_genere", joinColumns = @JoinColumn(name = "brano_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "genere_id", referencedColumnName = "ID"))
 	private Set<Genere> generi = new HashSet<Genere>();
 

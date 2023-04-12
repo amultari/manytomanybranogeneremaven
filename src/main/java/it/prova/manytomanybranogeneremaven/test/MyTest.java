@@ -39,6 +39,8 @@ public class MyTest {
 			testCreazioneECollegamentoBranoInUnSoloColpo(branoServiceInstance, genereServiceInstance);
 
 			testEstraiListaDescrizioneGeneriAssociateAdUnBrano(branoServiceInstance, genereServiceInstance);
+			
+			testCascadeAllDisaster(branoServiceInstance, genereServiceInstance);
 
 			// *********************************************************************************
 			// RIMUOVIAMO UN BRANO E VEDIAMO COSA ACCADE AI GENERI
@@ -315,6 +317,51 @@ public class MyTest {
 					"testRimozioneBranoECheckGeneriAttraversoNativeSql fallito: rimozione non avvenuta ");
 
 		System.out.println(".......testRimozioneBranoECheckGeneriAttraversoNativeSql fine: PASSED.............");
+	}
+
+	private static void testCascadeAllDisaster(BranoService branoServiceInstance, GenereService genereServiceInstance)
+			throws Exception {
+		System.out.println(".......testCascadeAllDisaster inizio.............");
+
+		// creo due brani e due generi
+		long nowInMillisecondi = new Date().getTime();
+		Brano branoInstanceX = new Brano("titolo" + nowInMillisecondi, "autore" + nowInMillisecondi,
+				LocalDate.parse("2020-08-10"));
+		Brano branoInstanceY = new Brano("titolo" + nowInMillisecondi, "autore" + nowInMillisecondi,
+				LocalDate.parse("2020-08-10"));
+		branoServiceInstance.inserisciNuovo(branoInstanceX);
+		branoServiceInstance.inserisciNuovo(branoInstanceY);
+		Genere genere1 = new Genere("genere" + nowInMillisecondi);
+		genereServiceInstance.inserisciNuovo(genere1);
+		Genere genere2 = new Genere("genere" + nowInMillisecondi + 1);
+		genereServiceInstance.inserisciNuovo(genere2);
+		branoServiceInstance.aggiungiGenere(branoInstanceX, genere1);
+		branoServiceInstance.aggiungiGenere(branoInstanceX, genere2);
+		branoServiceInstance.aggiungiGenere(branoInstanceY, genere1);
+		branoServiceInstance.aggiungiGenere(branoInstanceY, genere2);
+
+		// ricarico eager per forzare il test
+		Brano branoReloaded = branoServiceInstance.caricaSingoloElementoEagerGeneri(branoInstanceX.getId());
+		if (branoReloaded.getGeneri().size() != 2)
+			throw new RuntimeException("testCascadeAllDisaster fallito: 2 generi e branoInstanceX non collegati ");
+
+		// ricarico eager per forzare il test
+		Brano branoReloaded2 = branoServiceInstance.caricaSingoloElementoEagerGeneri(branoInstanceY.getId());
+		if (branoReloaded2.getGeneri().size() != 2)
+			throw new RuntimeException("testCascadeAllDisaster fallito: 2 generi e branoInstanceY non collegati ");
+
+		// rimuovo il primo ma siccome prova a rimuovere anche il secondo va in
+		// errore!!!
+		branoServiceInstance.rimuovi(branoReloaded.getId());
+
+		// il secondo deve risultare ancora associato e invece FALLISCE!!!! Se rimetto
+		// il cascade a Merge e Persist funziona di nuovo
+		branoReloaded2 = branoServiceInstance.caricaSingoloElementoEagerGeneri(branoInstanceY.getId());
+		if (branoReloaded2.getGeneri().size() != 2)
+			throw new RuntimeException(
+					"testCascadeAllDisaster fallito causa disastro sulla REMOVE: 2 generi e branoInstanceY non collegati ");
+
+		System.out.println(".......testRimozioneCdECheckGeneri fine: PASSED.............");
 	}
 
 }

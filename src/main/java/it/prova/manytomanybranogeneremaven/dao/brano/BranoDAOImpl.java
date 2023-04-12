@@ -59,15 +59,15 @@ public class BranoDAOImpl implements BranoDAO {
 	}
 
 	@Override
-	public List<String> loadListaDescrizioneGeneriAssociateAdUnGenere(Long idGenereInput) throws Exception {
+	public List<String> loadListaDescrizioneGeneriAssociateAdUnBrano(Long idBranoInput) throws Exception {
 		TypedQuery<String> query = entityManager.createQuery(
 				"select g.descrizione FROM Genere g left join g.brani b where b.id = :idBrano", String.class);
-		query.setParameter("idBrano", idGenereInput);
+		query.setParameter("idBrano", idBranoInput);
 		return query.getResultList();
 	}
 
 	@Override
-	public void deleteGenereAndUnlinkGeneri(Long idBranoInput) throws Exception {
+	public void deleteBranoAndUnlinkGeneri(Long idBranoInput) throws Exception {
 		entityManager.createNativeQuery("delete from brano_genere c where c.brano_id = ?1").setParameter(1, idBranoInput)
 				.executeUpdate();
 		entityManager.createNativeQuery("delete from brano c where c.id = ?1").setParameter(1, idBranoInput).executeUpdate();

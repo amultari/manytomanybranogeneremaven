@@ -165,7 +165,7 @@ public class BranoServiceImpl implements BranoService {
 			branoDAO.setEntityManager(entityManager);
 
 			// eseguo quello che realmente devo fare
-			branoDAO.deleteGenereAndUnlinkGeneri(idBrano);
+			branoDAO.deleteBranoAndUnlinkGeneri(idBrano);
 
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
@@ -266,7 +266,7 @@ public class BranoServiceImpl implements BranoService {
 		try {
 			branoDAO.setEntityManager(entityManager);
 
-			return branoDAO.loadListaDescrizioneGeneriAssociateAdUnGenere(idBranoInput);
+			return branoDAO.loadListaDescrizioneGeneriAssociateAdUnBrano(idBranoInput);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

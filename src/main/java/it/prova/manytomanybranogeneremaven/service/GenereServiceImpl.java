@@ -23,7 +23,7 @@ public class GenereServiceImpl implements GenereService {
 			genereDAO.setEntityManager(entityManager);
 
 			// eseguo quello che realmente devo fare
-			return genereDAO.list();
+			return genereDAO.findAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -42,7 +42,7 @@ public class GenereServiceImpl implements GenereService {
 			genereDAO.setEntityManager(entityManager);
 
 			// eseguo quello che realmente devo fare
-			return genereDAO.get(id);
+			return genereDAO.findById(id);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -115,7 +115,7 @@ public class GenereServiceImpl implements GenereService {
 			genereDAO.setEntityManager(entityManager);
 
 			// eseguo quello che realmente devo fare
-			genereDAO.delete(genereDAO.get(idGenere));
+			genereDAO.delete(idGenere);
 
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {

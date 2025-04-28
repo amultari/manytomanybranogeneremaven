@@ -28,7 +28,7 @@ public class BranoServiceImpl implements BranoService {
 			branoDAO.setEntityManager(entityManager);
 
 			// eseguo quello che realmente devo fare
-			return branoDAO.list();
+			return branoDAO.findAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -47,7 +47,7 @@ public class BranoServiceImpl implements BranoService {
 			branoDAO.setEntityManager(entityManager);
 
 			// eseguo quello che realmente devo fare
-			return branoDAO.get(id);
+			return branoDAO.findById(id);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,7 +140,7 @@ public class BranoServiceImpl implements BranoService {
 			branoDAO.setEntityManager(entityManager);
 
 			// eseguo quello che realmente devo fare
-			branoDAO.delete(branoDAO.get(idBrano));
+			branoDAO.delete(idBrano);
 
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {

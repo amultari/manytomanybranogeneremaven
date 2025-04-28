@@ -12,12 +12,12 @@ public class GenereDAOImpl implements GenereDAO {
 	private EntityManager entityManager;
 
 	@Override
-	public List<Genere> list() throws Exception {
+	public List<Genere> findAll() throws Exception {
 		return entityManager.createQuery("from Genere", Genere.class).getResultList();
 	}
 
 	@Override
-	public Genere get(Long id) throws Exception {
+	public Genere findById(Long id) throws Exception {
 		return entityManager.find(Genere.class, id);
 	}
 
@@ -38,11 +38,11 @@ public class GenereDAOImpl implements GenereDAO {
 	}
 
 	@Override
-	public void delete(Genere input) throws Exception {
-		if (input == null) {
+	public void delete(Long id) throws Exception {
+		if (id == null) {
 			throw new Exception("Problema valore in input");
 		}
-		entityManager.remove(entityManager.merge(input));
+		entityManager.createQuery("delete from Genere where id=?1").setParameter(1, id).executeUpdate();
 	}
 	
 	@Override
